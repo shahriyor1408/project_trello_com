@@ -27,5 +27,4 @@ public class UserEntity extends Auditable {
         this.lastName = lastName;
         this.language = language;
     }
-
 }
