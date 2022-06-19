@@ -3,6 +3,7 @@ package uz.meta.domains.auth;
 import lombok.*;
 import uz.meta.domains.Auditable;
 
+import javax.persistence.Entity;
 import java.time.LocalDateTime;
 
 @Getter

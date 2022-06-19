@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class AuthUI {
-
     AuthService service = new AuthService();
     AuthUserDao authUserDao = new AuthUserDao();
 
@@ -44,10 +43,6 @@ public class AuthUI {
             default -> BaseUtils.println("Wrong Choice", Colors.RED);
         }
         main(args);
-
-
-
-
     }
 
     private void logout() {
@@ -66,26 +61,26 @@ public class AuthUI {
                 BaseUtils.println("Phone number already registered", Colors.RED);
                 return;
             }
-            String otp = BaseUtils.otp(6);
-            OtpDto otpDto = OtpDto.builder()
-                    .otp(otp)
-                    .phone(phoneNumber)
-                    .expiry(LocalDateTime.now().plusMinutes(2))
-                    .build();
-            service.sendOtp(otpDto);
+//            String otp = BaseUtils.otp(6);
+//            OtpDto otpDto = OtpDto.builder()
+//                    .otp(otp)
+//                    .phone(phoneNumber)
+//                    .expiry(LocalDateTime.now().plusMinutes(2))
+//                    .build();
+//            service.sendOtp(otpDto);
 
             String receiverOtp = BaseUtils.readText("otp:");
-            UserOTPEntity userOTPEntity = service.findByOtpAndPhoneNumber(receiverOtp, phoneNumber);
+//            UserOTPEntity userOTPEntity = service.findByOtpAndPhoneNumber(receiverOtp, phoneNumber);
 
-            if (Objects.isNull(userOTPEntity)) {
-                BaseUtils.println("Invalid OTP", Colors.RED);
-                return;
-            }
-
-            if (userOTPEntity.getExpires().isBefore(LocalDateTime.now())) {
-                BaseUtils.println("Invalid OTP", Colors.RED);
-                return;
-            }
+//            if (Objects.isNull(userOTPEntity)) {
+//                BaseUtils.println("Invalid OTP", Colors.RED);
+//                return;
+//            }
+//
+//            if (userOTPEntity.getExpires().isBefore(LocalDateTime.now())) {
+//                BaseUtils.println("Invalid OTP", Colors.RED);
+//                return;
+//            }
 
             String firstName = BaseUtils.readText("First Name : ");
             String lastName = BaseUtils.readText("Last Name : ");
@@ -105,7 +100,9 @@ public class AuthUI {
     }
 
     private void login() {
-
+        String username = BaseUtils.readText("username ");
+        String password = BaseUtils.readText("password ");
+        print_response(service.login(username, password));
     }
 
     public void print_response(ResponseEntity response) {

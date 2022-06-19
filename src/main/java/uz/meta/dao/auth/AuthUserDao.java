@@ -7,6 +7,7 @@ import uz.meta.exceptions.CustomSQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class AuthUserDao {
     public UserEntity findUserByPhoneNumber(String phoneNumber) throws CustomSQLException {
@@ -30,5 +31,25 @@ public class AuthUserDao {
             throw new CustomSQLException(e);
         }
 
+    }
+
+    public Optional<String> login(String username, String password) throws CustomSQLException {
+        try {
+            PreparedStatement pstm = DbConfigurer
+                    .getConnection()
+                    .prepareStatement("select hr.user_login(?,?);");
+            pstm.setString(1, username);
+            pstm.setString(2, password);
+
+            ResultSet resultSet = pstm.executeQuery();
+            if (resultSet.next()) {
+
+                return Optional.of(resultSet.getString(1));
+            }
+            return Optional.empty();
+
+        } catch (SQLException e) {
+            throw new CustomSQLException(e.getMessage());
+        }
     }
 }
