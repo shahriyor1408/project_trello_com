@@ -2,7 +2,9 @@ package uz.meta.ui;
 
 import uz.jl.BaseUtils;
 import uz.jl.Colors;
+import uz.meta.dto.auth.EmployeeCreateDTO;
 import uz.meta.dto.auth.Session;
+import uz.meta.dto.auth.UserCreateDTO;
 import uz.meta.dto.response.ResponseEntity;
 import uz.meta.enums.UserRole;
 import uz.meta.service.auth.AuthService;
@@ -86,7 +88,23 @@ public class AuthUI {
     }
 
     private void register() {
+        String username = BaseUtils.readText("create username: ");
+        String password = BaseUtils.readText("create password: ");
+        String fullName = BaseUtils.readText("Your full name: ");
+        String phoneNumber = BaseUtils.readText("Your phone number: ");
+        String email = BaseUtils.readText("Your email: ");
+        EmployeeCreateDTO employeeCreateDTO = EmployeeCreateDTO.builder()
+                .fullName(fullName)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .build();
 
+        UserCreateDTO userCreateDTO = UserCreateDTO.builder()
+                .username(username)
+                .password(password)
+                .employeeCreateDTO(employeeCreateDTO)
+                .build();
+        service.register(userCreateDTO);
     }
 
     private void login() {

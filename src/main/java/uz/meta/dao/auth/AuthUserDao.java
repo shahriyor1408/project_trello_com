@@ -2,6 +2,7 @@ package uz.meta.dao.auth;
 
 import org.hibernate.Session;
 import uz.meta.config.HibernateUtils;
+import uz.meta.dto.auth.UserCreateDTO;
 import uz.meta.exceptions.CustomSQLException;
 
 import java.sql.*;
@@ -26,6 +27,33 @@ public class AuthUserDao {
             });
             try {
                 result = callableStatement.getString(1);
+            } catch (SQLException e) {
+                throw new CustomSQLException(e.getCause().getLocalizedMessage());
+            }
+            return Optional.of(result);
+        } finally {
+            session.getTransaction().commit();
+            session.close();
+        }
+    }
+
+    public Optional<Long> register(UserCreateDTO userCreateDTO) throws CustomSQLException {
+        Long result;
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
+        try {
+            CallableStatement callableStatement = session.doReturningWork(connection -> {
+                CallableStatement function = connection.prepareCall(
+                        "{ ? = call hr.user_create(?)}"
+                );
+                function.registerOutParameter(1, Types.VARCHAR);
+                function.setString(2, userCreateDTO.toString());
+                function.execute();
+                return function;
+            });
+            try {
+                result = callableStatement.getLong(1);
             } catch (SQLException e) {
                 throw new CustomSQLException(e.getCause().getLocalizedMessage());
             }
