@@ -30,6 +30,8 @@ public class HibernateUtils {
 //                reflections.getTypesAnnotatedWith(Entity.class)
 //                        .forEach(clazz -> sources.addAnnotatedClassName(clazz.getName()));
 
+//                sources.addAnnotatedClass(UserSessionEntity.class);
+
                 Metadata metadata = sources.getMetadataBuilder().build();
                 return metadata.getSessionFactoryBuilder().build();
             } catch (Exception e) {

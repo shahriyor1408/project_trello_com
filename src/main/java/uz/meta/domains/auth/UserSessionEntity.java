@@ -1,8 +1,6 @@
 package uz.meta.domains.auth;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.*;
 import uz.meta.domains.Auditable;
 
@@ -13,8 +11,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class UserSessionEntity extends Auditable {
+@Entity(name = "user_session")
+@Table(schema = "hr")
+public class UserSessionEntity {
+    @Id
+    @SequenceGenerator(name = "user_session_seq", schema = "hr",allocationSize = 1)
+    private Long id;
+
     @Column(nullable = false)
     private Long userID;
 

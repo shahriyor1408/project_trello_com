@@ -20,18 +20,20 @@ public class Auditable implements BaseDomain {
     private Long id;
 
     @CreationTimestamp
-    @Column(updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "created_at", updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
 
+    @Column(name = "created_by",nullable = false)
     private Long createdBy;
 
     @UpdateTimestamp
-    @Column
+    @Column(name = "updated_at")
     private Timestamp updatedAt;
 
+    @Column(name = "updated_by",nullable = false)
     private Long updatedBy;
 
-    @Column(columnDefinition = "smallint default 0")
+    @Column(name = "is_deleted", columnDefinition = "smallint default 0")
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     private boolean deleted;
 }
