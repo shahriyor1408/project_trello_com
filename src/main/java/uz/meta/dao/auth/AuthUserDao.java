@@ -1,55 +1,41 @@
 package uz.meta.dao.auth;
 
-import uz.meta.config.DbConfigurer;
-import uz.meta.domains.auth.UserEntity;
-import uz.meta.exceptions.CustomSQLException;
+import org.hibernate.Session;
+import uz.meta.config.HibernateUtils;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 public class AuthUserDao {
-    public UserEntity findUserByPhoneNumber(String phoneNumber) throws CustomSQLException {
+    public Optional<String> login(String username, String password) throws SQLException {
+        String result;
+        Session session = HibernateUtils.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+
         try {
-            PreparedStatement ps = DbConfigurer
-                    .getConnection()
-                    .prepareStatement("select t.* from hr.users t where t.phone  = ?;");
-            ps.setString(1, phoneNumber);
-            ResultSet resultSet = ps.executeQuery();
-            if (resultSet.next()) {
-                return UserEntity.childBuilder()
-                        .username(resultSet.getString("username"))
-                        .password(resultSet.getString("password"))
-                        .language(resultSet.getString("language"))
-                        .firstName(resultSet.getString("first_name"))
-                        .lastName(resultSet.getString("last_name"))
-                        .build();
+            CallableStatement callableStatement = session.doReturningWork(connection -> {
+                CallableStatement function = connection.prepareCall(
+                        "{ ? = call hr.user_login(?,?)}"
+                );
+                function.registerOutParameter(1, Types.VARCHAR);
+                function.setString(2, username);
+                function.setString(3, password);
+                function.execute();
+                return function;
+            });
+            try {
+                result = callableStatement.getString(1);
+            } catch (SQLException e) {
+                throw new RuntimeException(e.getMessage());
             }
-            return null;
-        } catch (SQLException e) {
-            throw new CustomSQLException(e);
-        }
 
-    }
+            return Optional.ofNullable(result);
 
-    public Optional<String> login(String username, String password) throws CustomSQLException {
-        try {
-            PreparedStatement pstm = DbConfigurer
-                    .getConnection()
-                    .prepareStatement("select hr.user_login(?,?);");
-            pstm.setString(1, username);
-            pstm.setString(2, password);
-
-            ResultSet resultSet = pstm.executeQuery();
-            if (resultSet.next()) {
-
-                return Optional.of(resultSet.getString(1));
-            }
-            return Optional.empty();
-
-        } catch (SQLException e) {
-            throw new CustomSQLException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            session.getTransaction().commit();
+            session.close();
         }
     }
 }

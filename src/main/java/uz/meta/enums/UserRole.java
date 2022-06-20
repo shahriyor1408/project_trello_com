@@ -2,5 +2,7 @@ package uz.meta.enums;
 
 public enum UserRole {
     USER,
-    ADMIN
+    ADMIN,
+    SUPER_ADMIN,
+    MANAGER
 }

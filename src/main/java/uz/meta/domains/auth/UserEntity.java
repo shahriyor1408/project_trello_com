@@ -1,31 +1,30 @@
 package uz.meta.domains.auth;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.*;
 import uz.meta.domains.Auditable;
-
-import javax.persistence.Entity;
-import java.time.LocalDateTime;
+import uz.meta.enums.UserRole;
+import uz.meta.enums.UserStatus;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
 public class UserEntity extends Auditable {
+    @Column(unique = true, nullable = false)
     private String username;
-    private String password;
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String language;
 
-    @Builder(builderMethodName = "childBuilder")
-    public UserEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, int deleted, String username, String password, String email, String firstName, String lastName, String language) {
-        super(id, createdAt, updatedAt, deleted);
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.language = language;
-    }
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false, columnDefinition = "default ACTIVE")
+    private UserStatus userStatus;
+
+    @Column
+    private UserRole userRole;
+
+    @Column(nullable = false)
+    private String language;
 }
