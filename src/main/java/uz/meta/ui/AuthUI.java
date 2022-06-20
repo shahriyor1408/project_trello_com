@@ -37,12 +37,12 @@ public class AuthUI {
             case "1" -> authUI.login();
             case "2" -> authUI.register();
             case "3" -> authUI.giveAdminToUser();
-            case "4" -> authUI.projectCRUD();
-            case "5" -> authUI.projectColumnCRUD();
+            case "4" -> authUI.boardCRUD();
+            case "5" -> authUI.boardColumnCRUD();
             case "6" -> authUI.settings();
             case "0" -> authUI.logout();
             case "q" -> {
-                BaseUtils.println("Bye");
+                BaseUtils.println("Bye", Colors.CYAN);
                 System.exit(0);
             }
             default -> BaseUtils.println("Wrong Choice", Colors.RED);
@@ -50,11 +50,11 @@ public class AuthUI {
         main(args);
     }
 
-    private void projectColumnCRUD() {
+    private void boardColumnCRUD() {
 
     }
 
-    private void projectCRUD() {
+    private void boardCRUD() {
         AuthUI authUI = new AuthUI();
         BaseUtils.println("Create Project    -> 1");
         BaseUtils.println("Delete Project    -> 2");
@@ -67,8 +67,8 @@ public class AuthUI {
             case "1" -> authUI.login();
             case "2" -> authUI.register();
             case "3" -> authUI.giveAdminToUser();
-            case "4" -> authUI.projectCRUD();
-            case "5" -> authUI.projectColumnCRUD();
+            case "4" -> authUI.boardCRUD();
+            case "5" -> authUI.boardColumnCRUD();
             default -> BaseUtils.println("Wrong Choice", Colors.RED);
         }
     }
@@ -78,7 +78,7 @@ public class AuthUI {
     }
 
     private void logout() {
-
+        Session.sessionUser = null;
     }
 
     private void settings() {
@@ -90,8 +90,8 @@ public class AuthUI {
     }
 
     private void login() {
-        String username = BaseUtils.readText("username ");
-        String password = BaseUtils.readText("password ");
+        String username = BaseUtils.readText("username : ");
+        String password = BaseUtils.readText("password : ");
         print_response(service.login(username, password));
     }
 
