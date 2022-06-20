@@ -1,12 +1,10 @@
 package uz.meta.config;
 
-import jakarta.persistence.Entity;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.reflections.Reflections;
 
 import java.io.FileReader;
 import java.util.Objects;

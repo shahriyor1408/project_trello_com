@@ -2,12 +2,13 @@ package uz.meta.dao.auth;
 
 import org.hibernate.Session;
 import uz.meta.config.HibernateUtils;
+import uz.meta.exceptions.CustomSQLException;
 
 import java.sql.*;
 import java.util.Optional;
 
 public class AuthUserDao {
-    public Optional<String> login(String username, String password) throws SQLException {
+    public Optional<String> login(String username, String password) throws CustomSQLException {
         String result;
         Session session = HibernateUtils.getSessionFactory().getCurrentSession();
         session.beginTransaction();
@@ -26,16 +27,13 @@ public class AuthUserDao {
             try {
                 result = callableStatement.getString(1);
             } catch (SQLException e) {
-                throw new RuntimeException(e.getMessage());
+                throw new CustomSQLException(e.getCause().getLocalizedMessage());
             }
-
-            return Optional.ofNullable(result);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            return Optional.of(result);
         } finally {
             session.getTransaction().commit();
             session.close();
         }
     }
 }
+
